@@ -4,12 +4,22 @@
     <nav-bar class="home-nav">
       <div slot="center">胡小姐家的店</div>
     </nav-bar>
-    <tab-control class="tab-control" :titles="['流行','新款','精选']" 
-    @tabClick="tabClick" ref="tabControl1" v-show="isFiexd"/>
+    <tab-control
+      class="tab-control"
+      :titles="['流行','新款','精选']"
+      @tabClick="tabClick"
+      ref="tabControl1"
+      v-show="isFiexd"
+    />
     <!-- scroll操控内容 -->
-    <scroll class="content" ref="scroll" 
-    :probe-type="3" @scroll="contentScroll" 
-    :pull-up-load="true" @pullingUp="loadMore">
+    <scroll
+      class="content"
+      ref="scroll"
+      :probe-type="3"
+      @scroll="contentScroll"
+      :pull-up-load="true"
+      @pullingUp="loadMore"
+    >
       <!-- 轮播图 -->
       <home-swiper :banners="banners"></home-swiper>
       <!-- 活动栏 -->
@@ -17,7 +27,12 @@
       <!-- 本周推荐 -->
       <feature-view></feature-view>
       <!-- 分类 -->
-      <tab-control class="tab-control" :titles="['流行','新款','精选']" @tabClick="tabClick" ref="tabControl"/>
+      <tab-control
+        class="tab-control"
+        :titles="['流行','新款','精选']"
+        @tabClick="tabClick"
+        ref="tabControl"
+      />
       <!-- 商品内容 -->
       <goods-list :goods="goods[currentType].list"></goods-list>
     </scroll>
@@ -53,7 +68,7 @@ export default {
 
     HomeSwiper,
     RecommendView,
-    FeatureView
+    FeatureView,
   },
   data() {
     return {
@@ -63,13 +78,13 @@ export default {
       goods: {
         pop: { page: 0, list: [] },
         new: { page: 0, list: [] },
-        sell: { page: 0, list: [] }
+        sell: { page: 0, list: [] },
       },
       currentType: "pop",
       isShowBackTop: false,
       isFiexd: false,
-      tabOffsetTop: 0, 
-      saveY: 0
+      tabOffsetTop: 0,
+      saveY: 0,
     };
   },
   activated() {
@@ -77,7 +92,7 @@ export default {
     this.$refs.scroll.scrollTo(0, this.saveY, 0);
   },
   deactivated() {
-    this.saveY = this.$refs.scroll.getScrollY()
+    this.saveY = this.$refs.scroll.getScrollY();
   },
 
   // 创造生命周期函数
@@ -91,25 +106,27 @@ export default {
     this.getHomeGoods("sell");
   },
   mounted() {
-    const refresh = this.debounce(this.$refs.scroll && this.$refs.scroll.refresh, 50)    
-      this.$bus.$on("itemImageLoad", () =>{
-        refresh()       
-      })
-      // 利用定时器来计算图片都加载后的距离顶部的高度,用$el拿到组件上的元素
+    const refresh = this.debounce(
+      this.$refs.scroll && this.$refs.scroll.refresh,
+      50
+    );
+    this.$bus.$on("itemImageLoad", () => {
+      refresh();
+    });
+    // 利用定时器来计算图片都加载后的距离顶部的高度,用$el拿到组件上的元素
     setTimeout(() => {
-      this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop
-    },300)  
+      this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop;
+    }, 300);
   },
   methods: {
-    // 防抖函数
     debounce(func, delay) {
-      let timer = null
-      return function(...args) {
-        if (timer) clearTimeout(timer)
+      let timer = null;
+      return function (...args) {
+        if (timer) clearTimeout(timer);
         timer = setTimeout(() => {
-          func.apply(this, args)
-        }, delay)
-      }
+          func.apply(this, args);
+        }, delay);
+      };
     },
     // 事件监听相关的方法
     //1.分类的点击
@@ -126,30 +143,30 @@ export default {
           this.currentType = "sell";
           break;
       }
-      this.$refs.tabControl.currentIndex = index
-      this.$refs.tabControl1.currentIndex = index
+      this.$refs.tabControl.currentIndex = index;
+      this.$refs.tabControl1.currentIndex = index;
     },
     //2.返回顶部的点击
     backClick() {
       //console.log("backClick")
-      this.$refs.scroll.scrollTo(0, 0)
+      this.$refs.scroll.scrollTo(0, 0);
     },
     contentScroll(position) {
       // console.log(position)
       // 返回顶部的显示
-      this.isShowBackTop = (-position.y) > 1000
+      this.isShowBackTop = -position.y > 1000;
       // 显示分类栏
-      this.isFiexd = (-position.y) > this.tabOffsetTop
+      this.isFiexd = -position.y > this.tabOffsetTop;
     },
     // 3.上拉加载更多
     loadMore() {
       // console.log("loadMore")
-      this.getHomeGoods(this.currentType)
+      this.getHomeGoods(this.currentType);
     },
 
     // 网络请求相关的方法
     getHomeMultidata() {
-      getHomeMultidata().then(res => {
+      getHomeMultidata().then((res) => {
         // console.log(res)
         // this.result = res
         this.banners = res.data.data.banner.list;
@@ -158,15 +175,15 @@ export default {
     },
     getHomeGoods(type) {
       const page = this.goods[type].page + 1;
-      getHomeGoods(type, page).then(res => {
+      getHomeGoods(type, page).then((res) => {
         this.goods[type].list.push(...res.data.data.list);
         this.goods[type].page += 1;
 
-        this.$refs.scroll.finishPullUp()
-        this.$refs.scroll.refresh()
+        this.$refs.scroll.finishPullUp();
+        this.$refs.scroll.refresh();
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

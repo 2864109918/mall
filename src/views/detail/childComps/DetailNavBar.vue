@@ -31,6 +31,7 @@ export default {
   methods: {
     titkeCilck(index) {
       this.currentIndex = index
+      this.$emit('titleClick', index)
     },
     backClick() {
       this.$router.back()

@@ -37,6 +37,7 @@ export default {
     this.scroll.on("scroll", position => {
       // console.log(position)
       this.$emit("scroll", position);
+      this.$emit("scroll1", position)
     });
     // 3.上拉加载
     this.scroll.on("pullingUp", () => {

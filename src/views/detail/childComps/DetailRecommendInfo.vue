@@ -1,7 +1,9 @@
 <template>
   <div class="recommend-info">
     <div class="info-header">热门推荐</div>
-    <goods-list-item v-for="(item, index) in recommendInfo" :key="index" :goodsitem="item"/>
+    <div class="goods-list-item">
+      <goods-list-item v-for="(item, index) in recommendInfo" :key="index" :goodsitem="item"/>  
+    </div>
   </div>
 </template>
 
@@ -34,5 +36,13 @@ export default {
     padding-left: 8px;
     font-size: 15px;
     color: #333;
+    
   }
+
+.goods-list-item{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  padding: 2px;
+}
 </style>

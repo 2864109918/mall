@@ -1,23 +1,27 @@
 <template>
   <div id="detail">
     <!-- 顶部导航栏 -->
-    <detail-nav-bar class="detail-bar" @titleClick="titleClick"/>
-    <scroll class="content" ref="scroll">
+    <detail-nav-bar class="detail-bar" @titleClick="titleClick" ref="navBar" />
+    <scroll class="content" ref="scroll" :probe-style="3" @scroll="titleSwitch" @scroll1="backTopScroll">
       <!-- 轮播图 -->
-      <detail-swiper :top-images="topImages"/>
+      <detail-swiper :top-images="topImages" />
       <!-- 基本信息 -->
-      <detail-base-info :goods="goods"/>
+      <detail-base-info :goods="goods" />
       <!-- 商品信息 -->
-      <detail-shop-info :shops="shops"/>
+      <detail-shop-info :shops="shops" />
       <!-- 详情数据信息 -->
-      <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad"/>
+      <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad" />
       <!-- 参数信息 -->
-      <detail-param-info :param-info="paramInfo" ref="param"/>
+      <detail-param-info :param-info="paramInfo" ref="param" />
       <!-- 评论信息 -->
-      <detail-comment-info :comment-info="commentInfo" ref="comment"/>
+      <detail-comment-info :comment-info="commentInfo" ref="comment" />
       <!-- 推荐信息 -->
-      <detail-recommend-info :recommend-info="recommendInfo" ref="recommend"/>
+      <detail-recommend-info :recommend-info="recommendInfo" ref="recommend" />
     </scroll>
+    <!-- 底部导航栏 -->
+    <detail-bottom-bar/>
+    <!-- 返回顶部 -->
+    <detail-back-top @click.native="backClick" v-show="isShowBackTop"/>
   </div>
 </template>
 
@@ -32,8 +36,16 @@ import DetailGoodsInfo from "./childComps/DetailGoodsInfo";
 import DetailParamInfo from "./childComps/DetailParamInfo";
 import DetailCommentInfo from "./childComps/DetailCommentInfo";
 import DetailRecommendInfo from "./childComps/DetailRecommendInfo";
+import DetailBottomBar from "./childComps/DetailBottomBar";
+import DetailBackTop from "components/content/backtop/BackTop";
 
-import { getDetail, getRecommend, Goods, Shops, GoodsParam} from "../../network/detail";
+import {
+  getDetail,
+  getRecommend,
+  Goods,
+  Shops,
+  GoodsParam,
+} from "../../network/detail";
 
 export default {
   name: "Detail",
@@ -47,7 +59,9 @@ export default {
     DetailGoodsInfo,
     DetailParamInfo,
     DetailCommentInfo,
-    DetailRecommendInfo
+    DetailRecommendInfo,
+    DetailBottomBar,
+    DetailBackTop
   },
   data() {
     return {
@@ -59,7 +73,9 @@ export default {
       paramInfo: {},
       commentInfo: {},
       recommendInfo: [],
-      infoLoadY: [0]
+      infoLoadY: [0],
+      currentIndex: 0,
+      isShowBackTop: false
     };
   },
 
@@ -83,31 +99,67 @@ export default {
       // 2.4.请求详情数据信息
       this.detailInfo = data.detailInfo;
       // 2.5.产品参数
-      this.paramInfo = new GoodsParam(data.itemParams.info, data.itemParams.rule)
+      this.paramInfo = new GoodsParam(
+        data.itemParams.info,
+        data.itemParams.rule
+      );
       // 2.6.评论信息
-      if(data.rate.cRate !== 0){
-        this.commentInfo = data.rate.list[0]
-      }    
-    })
+      if (data.rate.cRate !== 0) {
+        this.commentInfo = data.rate.list[0];
+      }
+    });
     // 3请求推荐信息
-    getRecommend().then(res => {
+    getRecommend().then((res) => {
       // console.log(res)
-      this.recommendInfo = res.data.data.list
-    })
+      this.recommendInfo = res.data.data.list;
+    });
   },
 
   methods: {
+    debounce(func, delay) {
+      let timer = null;
+      return function (...args) {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+          func.apply(this, args);
+        }, delay);
+      };
+    },
+    // 1.1添加每个组件距顶部的距离
     imageLoad() {
-      this.infoLoadY.push(this.$refs.param.$el.offsetTop -44)
-      this.infoLoadY.push(this.$refs.comment.$el.offsetTop -44)
-      this.infoLoadY.push(this.$refs.recommend.$el.offsetTop -44)
-      // console.log(this.infoLoadY)
       this.$refs.scroll.refresh();
-    }, 
+      this.infoLoadY.push(this.$refs.param.$el.offsetTop - 44);
+      this.infoLoadY.push(this.$refs.comment.$el.offsetTop - 44);
+      this.infoLoadY.push(this.$refs.recommend.$el.offsetTop - 44);
+      this.infoLoadY.push(Number.MAX_VALUE);
+      // console.log(this.infoLoadY)
+    },
+    // 1.2.点击顶部导航栏跳转对应位置
     titleClick(index) {
-      this.$refs.scroll.scrollTo(0, -this.infoLoadY[index], 200)
+      this.$refs.scroll.scrollTo(0, -this.infoLoadY[index], 200);
+    },
+    // 2.1.监听滑动距离并判断跳转哪个位置
+    titleSwitch(position) {
+      // console.log(position)
+      const positionY = -position.y;
+      for (let i = 0; i < this.infoLoadY.length - 1; i++) {
+        if (
+          this.currentIndex !== i && positionY >= this.infoLoadY[i] && positionY < this.infoLoadY[i + 1]) {
+          // console.log(i)
+          // this.debounce(console.log(i), 50)
+          this.currentIndex = i
+          this.$refs.navBar.currentIndex = this.currentIndex
+        }
+      }
+    },
+    // 3.1.返回顶部的点击
+    backClick() {
+      this.$refs.scroll.scrollTo(0, 0);
+    },
+    backTopScroll(position) {
+      this.isShowBackTop = -position.y > 1500
     }
-  }
+  },
 };
 </script>
 
