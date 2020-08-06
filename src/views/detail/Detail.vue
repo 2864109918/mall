@@ -17,9 +17,12 @@
       <detail-comment-info :comment-info="commentInfo" ref="comment" />
       <!-- 推荐信息 -->
       <detail-recommend-info :recommend-info="recommendInfo" ref="recommend" />
+      <ul>
+        <li></li>
+      </ul>
     </scroll>
     <!-- 底部导航栏 -->
-    <detail-bottom-bar/>
+    <detail-bottom-bar @addCart="addToCart"/>
     <!-- 返回顶部 -->
     <detail-back-top @click.native="backClick" v-show="isShowBackTop"/>
   </div>
@@ -27,6 +30,7 @@
 
 <script>
 import Scroll from "../../components/common/scroll/Scroll";
+
 
 import DetailNavBar from "./childComps/DetailNavBar";
 import DetailSwiper from "./childComps/DetailSwiper";
@@ -46,6 +50,8 @@ import {
   Shops,
   GoodsParam,
 } from "../../network/detail";
+
+import {mapActions} from 'vuex'
 
 export default {
   name: "Detail",
@@ -116,6 +122,8 @@ export default {
   },
 
   methods: {
+    ...mapActions(['addCart']),
+
     debounce(func, delay) {
       let timer = null;
       return function (...args) {
@@ -128,9 +136,9 @@ export default {
     // 1.1添加每个组件距顶部的距离
     imageLoad() {
       this.$refs.scroll.refresh();
-      this.infoLoadY.push(this.$refs.param.$el.offsetTop - 44);
-      this.infoLoadY.push(this.$refs.comment.$el.offsetTop - 44);
-      this.infoLoadY.push(this.$refs.recommend.$el.offsetTop - 44);
+      this.infoLoadY.push(this.$refs.param.$el.offsetTop -44);
+      this.infoLoadY.push(this.$refs.comment.$el.offsetTop -44);
+      this.infoLoadY.push(this.$refs.recommend.$el.offsetTop -44);
       this.infoLoadY.push(Number.MAX_VALUE);
       // console.log(this.infoLoadY)
     },
@@ -158,8 +166,20 @@ export default {
     },
     backTopScroll(position) {
       this.isShowBackTop = -position.y > 1500
+    },
+    // 4.1.点击添加到购物车
+    addToCart() {
+      const product = {}
+      product.iid = this.iid
+      product.image = this.topImages[0]
+      product.title = this.goods.title
+      product.desc = this.goods.desc
+      product.price = this.goods.realPrice
+      this.addCart(product).then(res => {
+        this.$toast.show(res, 1500)
+      })
     }
-  },
+  }, 
 };
 </script>
 
@@ -171,7 +191,8 @@ export default {
   height: 100vh;
 }
 #detail .content {
-  height: calc(100% - 44px);
+  height: calc(100% - 44px );
+  overflow: hidden;
 }
 .detail-bar {
   position: relative;

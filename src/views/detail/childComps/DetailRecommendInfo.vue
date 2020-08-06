@@ -29,6 +29,7 @@ export default {
 <style scoped>
  .recommend-info {
     padding: 5px;
+    padding-bottom: 35px;
   }
 
   .info-header {
