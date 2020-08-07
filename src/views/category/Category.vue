@@ -14,7 +14,7 @@ import NavBar from "components/common/navbar/NavBar";
 
 import TabMenu from "./childComps/TabMenu"
 
-import { getCategory } from "network/category.js";
+import { getCategory, } from "network/category.js";
 
 export default {
   name: "Category",
@@ -31,6 +31,7 @@ export default {
   created() {
     // 请求分类数据
     this.getCategory();
+    // this.getSubcategory()
   },
   methods: {
     // 网络请求的相关方法
@@ -42,6 +43,11 @@ export default {
         this.categories = data.category.list
       });
     },
+    // getSubcategory() {
+    //   getSubcategory().then((res) => {
+    //     console.log(res)
+    //   })
+    // }
   },
 };
 </script>
