@@ -3,7 +3,9 @@
     <nav-bar class="nav-bar">
       <div slot="center">用户信息</div>
     </nav-bar>
-    <user-info></user-info>
+
+    <user-info @click.native="loginClick"></user-info>
+
     <section class="account">
       <div class="account-item">
         <div class="number">
@@ -25,7 +27,7 @@
       </div>
     </section>
 
-    <!--3.封装成一个整体-->
+    <!--封装成一个整体-->
     <list-view :list-data="orderList" class="order-list"></list-view>
     <list-view :list-data="serviceList" class="service-list"></list-view>
   </div>
@@ -48,16 +50,21 @@ export default {
   data: function () {
     return {
       orderList: [
-        { icon: "#order", iconColor: "#ff8198", info: "我的消息" },
-        { icon: "#point", iconColor: "#fc7b53", info: "积分商城" },
-        { icon: "#vip", iconColor: "#ffc636", info: "会员卡" },
+        { icon: "~assets/img/profile/my_news.svg", info: "我的消息" },
+        { icon: "~assets/img/profile/integral.svg", info: "积分商城" },
+        { icon: "~assets/img/profile/vip.svg", info: "会员卡" },
       ],
       serviceList: [
-        { icon: "#service", iconColor: "#ff8198", info: "我的购物车" },
-        { icon: "#download", iconColor: "#ff8198", info: "下载购物APP" },
+        { icon: "~assets/img/profile/cart.svg", info: "我的购物车" },
+        { icon: "~assets/img/profile/download.svg", info: "下载购物APP" },
       ],
     };
   },
+  methods: {
+    loginClick() {
+      this.$router.push('/login')
+    }
+  }
 };
 </script>
 

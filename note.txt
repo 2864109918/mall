@@ -1,0 +1,129 @@
+一：项目的准备
+   
+    1.分好文件夹
+      assets：放css和img
+      common：放一些功能性的函数(防抖函数 时间戳转换 混合等)
+      components: 放组件的地方-->(common ->{navbar, scroll, swipe, tabbar, toast} , content{业务相关的组件})
+      network：放网络请求相关的东西
+      router：配置路由的地方
+      store：vuex -> 共享状态
+      view：每个页面的开发,
+   
+    2.新建vue.config.js -> 配置路径别名
+      新建.editorconfig -> 配置两格缩近
+
+$$  3.使用GitHub托管项目  
+
+二：在App.vue中引用封装好的MainTabBar
+
+    1.封装tabbar
+      1.1.封装TabBar {
+        定义一个插槽,给子组件TabBarItem使用
+        设置样式display: flex;和其他样式,用于平分TabBar的位置
+      }
+      1.2.封装TabBarItem {
+        <1>使用三个具名插槽 (注意点：需要div包裹,因为插槽会被替换,里面不能动态绑定样式)
+        <2>安装路由并且配置路由映射关系
+        <3>通过路由判断哪个item处于活跃状态,用计算属性来动态绑定样式
+          isActive() {
+            return this.$route.path.indexOf(this.path) !== -1  
+          },
+          activeStyle() {
+            return this.isActive ? {color: this.activeColor} :{}
+          }
+    
+    2.封装MainTabBar  之后用<router-view/>在App.vue里占位
+
+三：首页开发home
+
+    1.顶部导航栏的实现
+      1.1.封装navbar, 使用三个具名插槽 
+      1.2.引用navbar组件
+
+&&  2.请求首页的数据
+      2.1.安装使用axios
+      2.2.封装request.js -> 
+      // 导入axios
+        import axios from 'axios'
+
+        export function request(config) {
+      // 创建axios实例
+          const instance = axios.create({
+            baseURL: 'http://152.136.185.210:8000/api/z8',
+            timeout: 5000
+  })
+
+      // 发送网络请求
+        return instance(config)
+}
+      2.3.创建生命周期函数 created() {
+        // 1.请求首页数据
+        this.getHomeMultidata();
+      }
+        然后在methods中实现this.getHomeMultidata()
+
+      2.4.在data中创建空的数组{banners: [], recommends: []}来存放数据
+
+      2.5.将请求到的数据赋值给(banners,recommends)
+
+$$  3.轮播图的实现
+      3.1.封装HomeSwiper.vue, 
+      把首页的数据:banners="banners"通过父传子props方式传进去,再遍历之后做一个展示   
+
+    4.活动栏的实现
+      4.1.封装RecommendView.vue, 
+      把首页请求的数据:recommends="recommends通过父传子props方式传进去,再遍历之后做一个展示
+
+    5.本周推荐的实现
+      5.1.封装FeatureView.vue, 引用一个网站和一张图片实现功能
+
+    6.分类的实现
+      6.1.在components中的content中封装TabControl.vue
+
+      6.2.手动添加 titles="['流行','新款','精选']" 通过父传子props方式传进去,再遍历之后做一个展示
+
+      6.3.监听TabControl.vue中的item点击并作出相应的样式切换,最后将点击事件通过$emit('发送一个事件', index)
+
+      6.4.请求分类的数据
+        6.4.1.在home.js中发送数据请求
+        export function getHomeGoods(type, page) {
+          return request({
+            url: '/home/data',
+            params: {
+              type,
+              page
+            }
+          })
+        }
+
+        6.4.2.在data中创建goods数组用来接受请求来的数据
+        pop: { page: 0, list: [] },new: { page: 0, list: [] },sell: { page: 0, list: [] },
+
+        6.4.3.数据请求created(){this.getHomeGoods("pop");this.getHomeGoods("new");this.getHomeGoods("sell");}
+              
+        6.4.4.然后在methods完成相应的网络请求方法
+        getHomeGoods(type) {
+          const page = this.goods[type].page + 1;
+          getHomeGoods(type, page).then((res) => {
+            this.goods[type].list.push(...res.data.data.list); //...res.data.data.list ==> for遍历所有数组
+            this.goods[type].page += 1;
+
+            this.$refs.scroll.finishPullUp();  //下拉加载更多
+            this.$refs.scroll.refresh();      //刷新
+          });
+        },
+
+      6.5.在components的content中封装goods
+        6.5.1.在goods中创建组件GoodsList
+        6.5.2.创建GoodsListItem用于展示数据
+
+      6.6.点击分类切换数据
+        6.6.1.监听分类的点击,实现方法
+        this.currentType = Object.keys(this.goods)[index]
+        this.$refs.tabControl.currentIndex = index;
+
+        6.6.2.将点击的数据绑定到<goods-list :goods="goods[currentType].list"/>
+
+        6.6.3.在GoodsList中props接受goods数据,遍历数据item, 把item绑定给GoodsListItem
+
+        6.6.4.在GoodsListItem中props接受item数据,遍历做展示

@@ -9,7 +9,7 @@
         <i class="icon shop"></i>
         <span class="text">店铺</span>
       </div>
-      <div>
+      <div @click="collectClick">
         <i class="icon select"></i>
         <span class="text">收藏</span>
       </div>
@@ -24,11 +24,24 @@
 <script>
 export default {
   name: "DetailbottomBar",
+  data() {
+    return{
+      num: 1, 
+    }
+  },
   methods: {
     addCart() {
       this.$emit("addCart")
+    },
+    collectClick() {
+      this.num = this.num + 1
+      if (this.num % 2 == 0) {
+        this.$toast.show('收藏成功', 1500)
+      } else {
+        this.$toast.show('取消收藏', 1500)
+      }
     }
-  }
+  } 
 }
 </script>
 

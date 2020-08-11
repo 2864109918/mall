@@ -1,10 +1,8 @@
 <template>
   <div id="user-info"> 
-    <a href="#" class="clear-fix">
+    <div class="clear-fix">
       <slot name="user-icon">
-        <svg class="privateImage-svg left">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#avatar-default"></use>
-        </svg>
+        <img class="privateImage-svg left" src="~assets/img/profile/user_icon.svg">
       </slot>
       <div class="login-info left">
         <slot name="user-nickname">
@@ -12,13 +10,13 @@
         </slot>
         <div class="phone">
           <span>
-            <svg data-v-735ff1be="" fill="#fff" class="icon-mobile"><use data-v-735ff1be="" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#mobile"></use></svg>
+            <img src="~assets/img/profile/phone.svg" alt="" class="icon-mobile"> 
           </span>
           <slot name="user-phone">暂无绑定手机号</slot>
         </div>
       </div>
-      <svg data-v-735ff1be="" fill="#fff" class="arrow-svg right"><use data-v-735ff1be="" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use></svg>
-    </a>
+      <img src="~assets/img/profile/right.svg" alt="" class="arrow-svg">
+    </div>
   </div>
 </template>
 
@@ -31,7 +29,7 @@ export default {
 
 <style scoped>
 #user-info {
-    background-color: var(--color-tint);
+    background-color: rgb(235, 160, 235);
     padding: 15px;
     margin-top: -5px;
   }
@@ -48,9 +46,10 @@ export default {
   }
 
   #user-info .arrow-svg {
-    width: 11px;
+    width: 22px;
     height: 22px;
     margin-top: 18px;
+    margin-left: 140px;
   }
 
   #user-info .login-info {
@@ -73,6 +72,10 @@ export default {
     height: 18px;
     left: -15px;
     top: 0px;
+  }
+
+  .icon-mobile{
+    color: #fff;
   }
 </style>
 

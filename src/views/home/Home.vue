@@ -21,11 +21,11 @@
       @pullingUp="loadMore"
     >
       <!-- 轮播图 -->
-      <home-swiper :banners="banners"></home-swiper>
+      <home-swiper :banners="banners"/>
       <!-- 活动栏 -->
-      <recommend-view :recommends="recommends"></recommend-view>
+      <recommend-view :recommends="recommends"/>
       <!-- 本周推荐 -->
-      <feature-view></feature-view>
+      <feature-view/>
       <!-- 分类 -->
       <tab-control
         class="tab-control"
@@ -34,20 +34,20 @@
         ref="tabControl"
       />
       <!-- 商品内容 -->
-      <goods-list :goods="goods[currentType].list"></goods-list>
+      <goods-list :goods="goods[currentType].list"/>
     </scroll>
     <!-- 回到顶部 -->
-    <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
+    <back-top @click.native="backClick" v-show="isShowBackTop"/>
   </div>
 </template>
 
 <script>
 //公共组件注册
-import NavBar from "../../components/common/navbar/NavBar.vue";
-import TabControl from "../../components/content/tabControl/TabControl";
-import GoodsList from "../../components/content/goods/GoodsList.vue";
-import Scroll from "../../components/common/scroll/Scroll.vue";
-import BackTop from "../../components/content/backtop/BackTop.vue";
+import NavBar from "components/common/navbar/NavBar.vue";
+import TabControl from "components/content/tabControl/TabControl";
+import GoodsList from "components/content/goods/GoodsList.vue";
+import Scroll from "components/common/scroll/Scroll.vue";
+import BackTop from "components/content/backtop/BackTop.vue";
 
 //子组件注册
 import HomeSwiper from "./childComps/HomeSwiper";
@@ -132,17 +132,18 @@ export default {
     //1.分类的点击
     tabClick(index) {
       // console.log(index)
-      switch (index) {
-        case 0:
-          this.currentType = "pop";
-          break;
-        case 1:
-          this.currentType = "new";
-          break;
-        case 2:
-          this.currentType = "sell";
-          break;
-      }
+      // switch (index) {
+      //   case 0:
+      //     this.currentType = "pop";
+      //     break;
+      //   case 1:
+      //     this.currentType = "new";
+      //     break;
+      //   case 2:
+      //     this.currentType = "sell";
+      //     break;
+      // }
+      this.currentType = Object.keys(this.goods)[index]
       this.$refs.tabControl.currentIndex = index;
       this.$refs.tabControl1.currentIndex = index;
     },
@@ -169,8 +170,9 @@ export default {
       getHomeMultidata().then((res) => {
         // console.log(res)
         // this.result = res
-        this.banners = res.data.data.banner.list;
-        this.recommends = res.data.data.recommend.list;
+        const data = res.data.data
+        this.banners = data.banner.list;
+        this.recommends = data.recommend.list;
       });
     },
     getHomeGoods(type) {
