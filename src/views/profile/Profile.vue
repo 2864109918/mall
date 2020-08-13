@@ -50,13 +50,13 @@ export default {
   data: function () {
     return {
       orderList: [
-        { icon: "~assets/img/profile/my_news.svg", info: "我的消息" },
-        { icon: "~assets/img/profile/integral.svg", info: "积分商城" },
-        { icon: "~assets/img/profile/vip.svg", info: "会员卡" },
+        { icon: require("../../assets/img/profile/my_news.svg"), info: "我的消息" },
+        { icon: require("../../assets/img/profile/integral.svg"), info: "积分商城" },
+        { icon: require("../../assets/img/profile/vip.svg"), info: "会员卡" },
       ],
       serviceList: [
-        { icon: "~assets/img/profile/cart.svg", info: "我的购物车" },
-        { icon: "~assets/img/profile/download.svg", info: "下载购物APP" },
+        { icon: require("../../assets/img/profile/cart.svg"), info: "我的购物车" },
+        { icon: require("../../assets/img/profile/download.svg"), info: "下载购物APP" },
       ],
     };
   },

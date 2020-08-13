@@ -5,29 +5,34 @@
     </nav-bar>
     <div class="center">
       <div class="welcome-to-login">欢迎登录</div>
+
       <div class="login-method">
         <div class="possword-login" >密码登录</div>
         <div class="note-login" >注册账号</div>
       </div>
+
       <div class="login-info">
         <div class="phone-num">
           <div>
             <img src="~assets/img/profile/phone.svg" alt="">
             手机号</div>
-          <input type="text"  placeholder="请输入手机号或用户名">
+          <input type="text">
         </div>
         <div class="possword">
           <div>
             <img src="~assets/img/profile/possword.svg" alt="">
             密码</div>
-          <input type="text" placeholder="请输入密码">
+          <input type="text" >
         </div>
       </div>
+
       <div class="user-login"><span>登录</span></div>
+
       <div class="user-help">
         <span>忘记密码？</span>
         <span>立即注册></span>
       </div>
+
       <div class="other-login">
         <div>- 第 三 方 登 录 -</div>
         <img src="~assets/img/profile/QQ.svg" alt="">
@@ -35,6 +40,7 @@
         <img src="~assets/img/profile/微博.svg" alt="">
         
       </div>
+
       <div class="agreement">
         <input type="radio">
         我已阅读并同意<span>《使用协议》</span>和<span>《隐私政策》</span>
@@ -95,10 +101,12 @@ export default {
 }
 .phone-num input,
 .possword input{
-  border-radius: 20px;
   height: 30px;
   width: 80%;
   margin-top: 10px;
+  border: 0px;
+  outline: none;
+  border-bottom: 1px solid rgb(7, 218, 218);
 }
 .user-login{
   display: flex;

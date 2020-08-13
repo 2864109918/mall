@@ -2,11 +2,7 @@
     <div id="list">
       <div v-for="(item, index) in listData" :key="index" class="item" @click="itemClick">
         <div class="icon">
-          <!-- <img :src="item.icon" alt=""> -->
-          <img src="~assets/img/profile/my_news.svg" alt="">
-          <!-- <img src="~assets/img/profile/my_news.svg" alt=""> -->
-          <!-- <img src="~assets/img/profile/my_news.svg" alt=""> -->
-          <!-- <img src="~assets/img/profile/my_news.svg" alt=""> -->
+          <img :src="item.icon" alt="">
         </div>
         <img src="~assets/img/profile/right.svg" alt="" class="right">
         <div class="info">{{item.info}}</div>
@@ -49,6 +45,7 @@
   .icon img {
     width: 18px;
     height: 18px;
+    margin-left: 5px;
   }
 
   .item .icon {
